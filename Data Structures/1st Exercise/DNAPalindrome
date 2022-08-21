@@ -1,0 +1,61 @@
+package DomesErgasia.com;
+
+import java.util.Scanner;
+
+public class DNAPalindrome {
+
+	public static void main(String[] args) {
+		Scanner scannerLine =new Scanner(System.in);//input of the DNA
+		System.out.println("Give me a palindromic DNA :");
+		System.out.print(">>");
+		String newLine=scannerLine.nextLine();
+		scannerLine.close();
+		
+		if(newLine.length()%2!=0) { //checking is the length of the DNA is divided by 2(if not it can't be palindromic)
+			System.out.println("The length of the DNA is an odd number so it can't be Watson-Crick complemented palindrome" );
+			System.exit(0);
+		}
+		
+		StringDoubleEndedQueueImpl<String> palindromic =new StringDoubleEndedQueueImpl<String>();//creating a double-ended List
+		String c="";
+		for(int i=0;i<newLine.length();i++) {//checking if the characters are A T C or G
+			c=String.valueOf(newLine.charAt(i));//converting char to string
+			if(!c.equals("A") && !c.equals("T") && !c.equals("C") && !c.equals("G")) {
+				System.out.println("the character "+"'"+c+"'"+" is not acceptable");
+				System.exit(0);
+			}
+			palindromic.addLast(c);//adding individually strings to the list
+		}
+																							//sleep
+		System.out.println("Checking....Please wait.." );
+		try{Thread.sleep(900);}catch(InterruptedException e){System.out.println(e);};
+		System.out.println("");
+		
+		StringDoubleEndedQueueImpl<String>.Node<String> nodehead=palindromic.head;//head node
+		StringDoubleEndedQueueImpl<String>.Node<String> nodetail=palindromic.tail;//tail node
+		
+		boolean flag=true;
+		int size=palindromic.size()/2;
+		int sum=1;
+		while(sum<=size) {//checking if the DNA is palindromic
+			if(nodehead.item.equals("A")) {
+				nodehead.item="T";
+			}else if(nodehead.item.equals("T")){
+				nodehead.item="A";
+			}else if(nodehead.item.equals("C")){ 
+				nodehead.item="G";
+			}else if(nodehead.item.equals("G")){ 
+				nodehead.item="C";
+			}
+			if(!nodehead.item.equals(nodetail.item)) {
+				flag=false;
+				System.out.println("The DNA isn't Watson-Crick complemented palindrome");
+				break;
+			}
+			nodehead=nodehead.next;nodetail=nodetail.previous;sum++;
+		}
+		if(flag==true) {
+			System.out.println("The DNA is Watson-Crick complemented palindrome");
+		}
+	}
+}
