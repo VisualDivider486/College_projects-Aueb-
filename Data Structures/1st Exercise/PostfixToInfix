@@ -1,0 +1,68 @@
+package DomesErgasia.com;
+import java.util.Scanner;
+
+
+public class PostfixToInfix {
+
+	public static void main(String[] args) {
+		Scanner scannerLine =new Scanner(System.in);//input the sequence
+		System.out.println("Give me postfix :");
+		System.out.print(">>");
+		String newLine=scannerLine.nextLine();
+		scannerLine.close();
+		
+		StringDoubleEndedQueueImpl<String> ouraPostFix =new StringDoubleEndedQueueImpl<String>();//creating a double-linked array
+		String s=" ";
+		int operators=0;//making these variables to check if numbers are more than 
+		int numbers=0;  //operators by 1
+		for(int i=0;i<newLine.length();i++) {//checking if the sequence doesn't have special characters and letters 
+			s=String.valueOf(newLine.charAt(i));
+			if(s.equals("1") || s.equals("2") || s.equals("3") || s.equals("4") || s.equals("5") 
+					|| s.equals("6") || s.equals("7") || s.equals("8") 
+					|| s.equals("9") || s.equals("0")) {
+				numbers++;
+			}else if(s.equals("+")
+			|| s.equals("-") || s.equals("*") || s.equals("/")){
+				operators++;
+			}else {
+				System.out.println("the character "+"'"+s+"'"+" is not acceptable");
+				System.exit(0);
+			}
+			ouraPostFix.addLast(s);
+		}
+		if(!((operators+1)==numbers)) {
+			System.out.println("Wrong Input");
+			System.exit(0);
+		}
+		if( ouraPostFix.getLast().equals("+")//checking if the sequence ends with an operator
+				|| ouraPostFix.getLast().equals("-") || ouraPostFix.getLast().equals("*") || ouraPostFix.getLast().equals("/")) {
+			
+		}else {
+			System.out.println("The sequence doens't end with an operator ");
+			System.exit(0);
+		}
+		
+		StringDoubleEndedQueueImpl<String>.Node<String> nodemikro=ouraPostFix.head;//Initialising the first node
+		//creating the INFIX sequence
+		while(nodemikro!=null) {
+			if (nodemikro.item.equals("+") || nodemikro.item.equals("-") || nodemikro.item.equals("*") || nodemikro.item.equals("/")) {
+				nodemikro.item="("+ nodemikro.previous.previous.item + nodemikro.item + nodemikro.previous.item +")";
+				
+				nodemikro.previous.item="";
+				nodemikro.previous.previous.item="";
+				if(nodemikro.previous.previous.previous!=null) {
+					nodemikro.previous=nodemikro.previous.previous.previous;
+				}else {
+					nodemikro.previous=null;
+				}
+			}nodemikro=nodemikro.next;
+		}
+		System.out.println("Creating Infix sequence...." );                               //sleep for 1 sec
+		try{Thread.sleep(1000);}catch(InterruptedException e){System.out.println(e);};
+		System.out.println("");
+		
+		System.out.print("The Infix sequence is :");ouraPostFix.printQueue(System.out);//printing the infix sequence
+		System.out.println("End of program");
+	}
+
+}
