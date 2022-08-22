@@ -1,0 +1,95 @@
+package domesergasias2.com;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+public class City implements CityInterface ,Comparable<City>{
+	private int ID;
+	private String name;
+	private int population;
+	private int covidCases;
+	
+
+	@Override
+	public int getID() {
+		return ID;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public int getPopulation() {
+		
+		return population;
+	}
+
+	@Override
+	public int getCovidCases() {
+		return covidCases;
+	}
+
+	@Override
+	public void setID(int ID) {
+		this.ID=ID;
+		
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name=name;
+		
+	}
+
+	@Override
+	public void setPopulation(int population) {
+		this.population=population;
+		
+	}
+
+	@Override
+	public void setCovidCases(int CovidCases) {
+		this.covidCases=CovidCases;
+		
+	}
+
+	@Override
+	public int compareTo(City c1) {
+		City c2=(City) c1;// the secons city
+		BigDecimal cDensity1=calculateDensity(getCovidCases(),getPopulation());//using calculateDensity to find covid cases per 50k
+		BigDecimal cDensity2=calculateDensity(c2.getCovidCases(),c2.getPopulation());
+		if(cDensity1.compareTo(cDensity2)<0){ //comparing densities
+			return 1;
+		}else if(cDensity1.compareTo(cDensity2)>0) {
+			return -1;
+		}else {
+			if(getName().compareTo(c2.getName())>0) {//if densities are equal comparing names
+				return 1;
+			}else if(getName().compareTo(c2.getName())<0){
+				return -1;
+			}else {//and lastly IDs
+				if(getID()>c2.getID()) {//pws 8a kseroume poio einai pio
+					return 1;    
+				}else {
+					return -1;
+				}
+			}
+		}
+	}
+
+	public BigDecimal calculateDensity(int number1,int number2 ) {//finds covidCases per 50k using BigDecimal for higher accuracy
+		String str1=String.valueOf(number1);//covidCases
+		String str2=String.valueOf(number2);//population
+		String str3=String.valueOf(50_000);//constant 50_000
+		
+		BigDecimal big1=new BigDecimal(str1);
+		BigDecimal big2=new BigDecimal(str2);
+		BigDecimal big3=new BigDecimal(str3);
+		//rounds to 2 digitsss
+		BigDecimal cd=(big1.multiply(big3)).divide(big2,2,RoundingMode.HALF_EVEN);//rouns to 2 digits and to an even number
+		return cd;
+	}
+
+}
