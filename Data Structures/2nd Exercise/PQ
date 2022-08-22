@@ -1,5 +1,3 @@
-package domesergasias2.com;
-
 public class PQ {
 	
 	private City[] pq; // the heap to store data in
