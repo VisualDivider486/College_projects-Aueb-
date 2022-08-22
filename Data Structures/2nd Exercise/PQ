@@ -1,0 +1,142 @@
+package domesergasias2.com;
+
+public class PQ {
+	
+	private City[] pq; // the heap to store data in
+    private int size; // current size of the queue
+    
+    
+    public PQ(int k) {
+    	 this.pq = new City[k];
+         this.size = 0;
+    }
+	public boolean isEmpty() {
+		return size()==0;
+	}
+	
+	public int size() {
+		if(size>0) return size;
+		
+		return 0;
+	}
+	
+	public void insert(City x) {
+		if(size+1 >=0.75*pq.length ) {
+    		resize();
+    	}
+		
+    	pq[++size]=x;
+    	if (size==1) {
+    		return;
+    	}swim(size);
+
+	}
+	
+	public City max() {
+	    if (size == 0)
+            return null;
+
+        return pq[1];
+	}
+	
+	public City getmax() {
+		  // Ensure not empty
+        if (size == 0) {
+            return null;
+        }
+        // Keep a reference to the root item
+        City root = (City) pq[1];
+
+        // Replace root item with the one at rightmost leaf
+        pq[1] = pq[size];
+        --size;
+        																											
+        // Dispose the rightmost leaf
+        // Sink the new root element
+        sink(1);
+
+        // Return the int removed
+        return root;
+	}
+	
+	public City remove(int id) {
+		for(int i=1;i<=pq.length;i++) {
+			    if(id==pq[i].getID()) {
+				
+				if (size == 0)
+		            return null;
+		        // Keep a reference to the root item
+		        City city =(City) pq[i];
+
+		        // Replace root item with the one at rightmost leaf
+		        pq[i] = pq[size];
+		        --size;
+
+		        // Dispose the rightmost leaf
+		        // Sink the new root element
+		        sink(i);
+
+		        // Return the int removed
+		        return city;
+			}
+		}
+	return null;
+	}
+	public void sink(int i) {
+        // determine left, right child
+        int left = 2 * i;
+        int right = left + 1;
+
+        // if 2*i > size, node i is a leaf return
+        if (left > size)
+            return;
+
+        // while haven't reached the leafs
+        while (left <= size) {
+            // Determine the largest child of node i
+            int max = left;
+            if (right <= size) {
+                if (pq[left].compareTo(pq[right]) ==1)
+                    max = right;
+            }
+
+            // If the heap condition holds, stop. Else swap and go on.
+            // child smaller than parent
+            if (pq[i].compareTo(pq[max]) ==-1)
+                return;
+            else {
+                swap(i, max);
+                i = max;
+                left = i * 2;
+                right = left + 1;
+            }
+        }
+    }
+	public void swim(int i) {
+    	if(i==1)
+    		return;
+    	int parent =i/2;
+    			while(i!=1 && pq[i].compareTo(pq[parent])==-1) {
+    				swap(i,parent);
+    				i=parent;
+    				parent=i/2;
+    			}
+    }
+	
+	public void swap(int i, int j) {
+    	City tmp = pq[i];
+        pq[i] = pq[j];
+        pq[j] = tmp;
+    }
+	
+	public void resize() {
+		City[] newPQ = (City[]) new City[pq.length*2];//regrow the length of the array by its length 
+        																  //multiplied by 2
+        
+		for (int j = 0; j <= size; j++){
+            newPQ[j] = pq[j];
+            //creating the new array
+        }
+        pq = newPQ;
+	}	
+}
