@@ -1,0 +1,100 @@
+package domesergasias2.com;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class Dynamic_Median {
+
+	public static void main(String[] args) {
+		System.out.println("Ylopoihsh me Dynamic Median\n");
+		
+		Scanner scannerLine =new Scanner(System.in);//
+	  	System.out.println("Give me the file name(including .txt) :");
+		System.out.print(">>");
+		String fileName=scannerLine.nextLine();
+
+		PQ pq1 =new PQ(5);         //create PriorityQueue to add items of the file
+		PQ pq2= new PQ(5);
+		int iterations=0;
+		int median=0;
+		City removedCity=null;//bgale 
+    try {
+      File myObj = new File(fileName);
+      scannerLine.close();				//BALE SE SCANNER ONOMA FILE
+      Scanner myReader = new Scanner(myObj);
+      int i=0;
+      int ID=1;
+      int population=1;
+      int covidCases=0;
+      City city1=new City();
+      while (myReader.hasNextLine()) {
+        String data = myReader.next();
+        
+        if(i==0) {//ID
+        	if(ID>0 && ID<=999) {
+        		ID=Integer.parseInt(data);
+        		city1.setID(ID);
+        	}else {
+        		System.out.println("ID out of range [1,999]");
+        	}
+        	
+        }else if(i==1) {//name
+        	if(data.length()<50) {
+        		city1.setName(data);
+        	}
+        	else {
+        		System.out.println("Name is more than 50 characters long");
+        	}
+
+        }else if(i==2) {//population
+        	if(population>0 && population<10_000_000) {
+        		population=Integer.parseInt(data);
+	        	city1.setPopulation(population);
+        	}
+        	else {
+        		System.out.println("the population isn't in range (0,10.000.000)");
+        	}
+        
+        }else if(i==3) {//covid cases
+        	covidCases=Integer.parseInt(data);
+        	if(population<covidCases) {
+        		System.out.println("Covid cases are more than the population");
+        		System.exit(0);
+        	}
+        	city1.setCovidCases(covidCases);
+        }
+        i++;
+        if(i==4) {
+        	pq1.insert(city1);
+        	i=0;		//starting again
+        	iterations++;
+        	if(iterations%5==0) {
+        		median=iterations/2;
+        		if(iterations%2==0) {
+        			median--;
+        		}
+        		for(int x=0;x<median;x++) {
+        			removedCity=pq1.getmax();//removes from first priorityQueue cities to get to median
+        			pq2.insert(removedCity);//adds to second priorityQueue
+        			if(x==median-1) {
+        				removedCity=pq1.getmax();//removes from first priorityQueue cities to get to median
+        				System.out.print("The median city for "+iterations+" cities is:");
+            			System.out.println(removedCity.getName());System.out.println();
+            			pq2.insert(removedCity);//adds to second priorityQueue
+        			}
+        		}while(pq2.max()!=null) {
+        			pq1.insert(pq2.getmax());
+        		}
+        	}
+        	City city2 =new City();
+        	city1=city2;
+        }
+        //System.out.println(data);
+      }
+      myReader.close();
+    } catch (FileNotFoundException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+}}
