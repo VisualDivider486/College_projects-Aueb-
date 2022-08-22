@@ -1,0 +1,137 @@
+package domesergasias2.com;
+import java.io.File;  // Import the File class
+import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner; // Import the Scanner class to read text files
+
+public class Covid_k {
+		 public static void main(String[] args) {
+			 	//scanner that is used to read the name of the file
+			 	System.out.println("Ylopoihsh me Quicksort taksinomhsh\n");
+			  	Scanner scannerLine =new Scanner(System.in);//
+			  	System.out.println("Give me the file name(including .txt) :");
+				System.out.print(">>");
+				String fileName=scannerLine.nextLine();
+
+				//scanner that is used to read how many cities we need to print
+			 	Scanner scannerInt =new Scanner(System.in);
+				System.out.println("Give me k (k is the number of cities we want with the most cases per 50k people):");
+				System.out.print(">>");
+				Integer k=scannerInt.nextInt();
+				scannerInt.close();
+				int grammes=0;
+				try {
+					File obj=new File(fileName);
+					Scanner Reader = new Scanner(obj);
+					while(Reader.hasNextLine()) {
+						Reader.nextLine();
+						grammes++;
+						System.out.println(grammes);
+					}Reader.close();
+				}catch (FileNotFoundException e1) {
+			    	System.out.println("An error occurred.");
+			    	e1.printStackTrace();
+			    }
+				//List<City> cities =new ArrayList<City>();         //create list to add items of the file
+				City[] cities=new City[grammes];
+				//kanto me array!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				
+		    try {
+		      File myObj = new File(fileName);
+		      scannerLine.close();
+		      Scanner myReader = new Scanner(myObj);
+		      byte line=-1;//position array element
+		      byte i=0;	//it is used to tell the programmer what the current data is(ID,population,covidCases,name)
+		      int ID=1;
+		      int population=1;
+		      int covidCases=0;
+		      City city1=new City();//creating new Object City 
+		      while (myReader.hasNextLine()) {
+		        String data = myReader.next();
+		        
+		        if(i==0) {//ID
+		        	if(ID>0 && ID<=999) {
+		        		ID=Integer.parseInt(data);//everytime data is String so it changes to an Integer if i is 0,2,3 
+		        		city1.setID(ID);
+		        	}else {
+		        		System.out.println("ID out of range [1,999]");
+		        	}
+		        	
+		        }else if(i==1) {//name
+		        	if(data.length()<50) {//length cant be be more than 50 letters
+		        		city1.setName(data);
+		        	}
+		        	else {
+		        		System.out.println("Name is more than 50 characters long");
+		        	}
+
+		        }else if(i==2) {//population
+		        	if(population>0 && population<10_000_000) {//population limits
+		        		population=Integer.parseInt(data);
+			        	city1.setPopulation(population);
+		        	}
+		        	else {
+		        		System.out.println("the population isn't in range (0,10.000.000)");
+		        	}
+		        
+		        }else if(i==3) {//covidCases must be equal or less than population
+		        	covidCases=Integer.parseInt(data);
+		        	if(population<covidCases) {
+		        		System.out.println("Covid cases are more than the population");
+		        		System.exit(0);
+		        	}
+		        	city1.setCovidCases(covidCases);
+		        }
+		        i++;
+		        if(i==4) {//we are on the next line so we save the current city and go to the next
+		        	line++;
+		        	cities[line]=city1;
+		        	i=0;		//starting again
+		        	City city2 =new City();
+		        	city1=city2;
+		        }
+		    }
+		      	myReader.close();
+		    }catch (FileNotFoundException e) {
+		    	System.out.println("An error occurred.");
+		    	e.printStackTrace();
+		    }
+		    
+		    if(k>cities.length) {
+		    	System.exit(0);//checking if the top k cities we need to print are equall or less than the total cities in the file
+		    }
+		    quickSort(cities,0,cities.length);//descending order of covidCases as of 50k people per city
+		    for(int i=0;i<k;i++) {
+		    	System.out.println(cities[i].getName());//printing the names of the top k cities
+		    }
+		 }
+		 public static void quickSort(City[] input,int start, int end) {
+		    	if(end-start<2) {
+		    		return;
+		    	}
+		    	int pivotIndex=partition(input,start,end);
+		    	quickSort(input,start,pivotIndex);
+		    	quickSort(input,pivotIndex+1,end);
+		    }
+		 public static int partition(City[] input,int start, int end) {
+			 City pivot=input[start];
+			 int i = start;
+			 int j = end;
+			
+			 while(i<j) {
+				 
+				 while(i<j && input[--j].compareTo(pivot)==1); //input[--j].compareTo(pivot)==1
+					 if(i<j) {
+						 input[i]=input[j];
+					 }
+					 
+				while(i<j && input[++i].compareTo(pivot)==-1); 
+					if(i<j) {
+						input[j]=input[i];
+					 }
+			 }
+			 input[j]=pivot;
+			 return j;
+		 }
+}
