@@ -1,5 +1,3 @@
-package domesergasias2.com;
-
 public interface CityInterface {
 
 	public int getID();
