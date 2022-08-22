@@ -1,0 +1,110 @@
+package DomesErgasia.com;
+
+import java.io.PrintStream;
+import java.util.NoSuchElementException;
+
+public class StringDoubleEndedQueueImpl<T> implements StringDoubleEndedQueue<T>{
+	
+	@SuppressWarnings("hiding")
+	class Node<T>{  
+        T item;            //data of node
+        Node<T> previous;  //previous node connected to a specific node
+        Node<T> next;      //next node -||-
+   
+        public Node(T item,Node<T> prev,Node<T> next) {  
+            this.item = item; 
+            this.previous=prev;
+            this.next=next;
+        }  
+    }
+	protected Node<T> head, tail = null; //making it protected bc we need it at 2nd and 3rd exercise
+	private int size=0; //Initializing variable size
+	
+	@Override
+	public boolean isEmpty() {//we use size() to see if size is greater than 0
+		if(size()!=0) { 
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public void addFirst(T item) {
+		if(isEmpty()) {
+			head=tail = new Node<T>(item,null,null); //first node doesn't have next or previous node so we are setting them to null
+		}else {
+			head.previous= new Node<T>(item,null,head);//changing first to second
+			head=head.previous;//setting node to first
+		}size++;
+	}
+
+	@Override
+	public T removeFirst() throws NoSuchElementException {
+		if(isEmpty()) throw new NoSuchElementException("Empty queue");
+		
+			T data =head.item; //creating T argument with data of head
+			head=head.next;    //the head will now be head.next
+			size--;
+			if(!isEmpty()) {//if don't have any other node left 
+				head.previous=null;
+			}else {
+				tail=null;//we set tail to null
+			}return data;
+	}
+
+	@Override
+	public void addLast(T item) {//same as addFirst but with the ending Node
+		if(isEmpty()) {
+			head=tail = new Node<T>(item,null,null);
+		}else {
+			tail.next= new Node<T>(item,tail,null);
+			tail=tail.next;
+		}size++;
+	}
+
+	@Override
+	public T removeLast() throws NoSuchElementException {
+		
+		if(isEmpty()) throw new NoSuchElementException("Empty queue");
+		
+			T data =tail.item; //same as removeFirst but with ending Node
+			tail=tail.previous;
+			size--;
+			if(!isEmpty()) {//if we haven't any other node left
+				tail.next=null;
+			}else {
+				head=null;//we set head to null
+			}return data;
+		}
+
+	@Override
+	public T getFirst() throws NoSuchElementException {
+		if(isEmpty()) throw new NoSuchElementException("Empty queue");
+		
+			return head.item; //return first item if node isn't null
+	}
+
+	@Override
+	public T getLast() throws NoSuchElementException {
+		if(isEmpty()) throw new NoSuchElementException("Empty queue");
+		
+			return tail.item; //return last item if node isn't null
+	}
+
+	@Override
+	public void printQueue(PrintStream stream) {
+		Node<T> start =head; //initializing the iteration
+		while(start !=null) {
+			if(start.item!="") //if node item is empty don't enter it
+				stream.print(start.item+" ");
+			start=start.next;
+		}
+		stream.println();
+	}
+
+	@Override
+	public int size() {//return variable int size if size is greater than zero else 0
+		if(size>0) return size; 
+		return 0;
+	}
+}
