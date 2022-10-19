@@ -1,1 +1,1 @@
-kk
+These small exercises are part of the second year. They helped me understand and implement basic data structures such as LIFO, FIFO, Double Linked Lists etc in order to be able to store the information needed to solve the 2 problems being asked in a more efficient way.
