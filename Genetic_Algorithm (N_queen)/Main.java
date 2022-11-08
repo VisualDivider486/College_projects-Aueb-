@@ -15,12 +15,12 @@ public class Main
 		if(scanner1<=3) {
 			System.out.println("\n***  The number must be greater than 3   ***\n");
 		}
-    	}while(scanner1>=3);
+    	}while(scanner1<=3);
 		scannerInteger.close();
 		
 		long startTime =System.currentTimeMillis();
         GeneticAlgorithm algorithm = new GeneticAlgorithm(scanner1);
-        System.out.println("Iterations starting...");
+        System.out.println(" starting...");
         int sum=0;
         for(int i=1;i<scanner1;i++) {
         	sum+=i;
